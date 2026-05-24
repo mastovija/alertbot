@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: alertbot
+      POSTGRES_USER: alertbot
+      POSTGRES_PASSWORD: alertbot
+    ports:
+      - "5440:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
