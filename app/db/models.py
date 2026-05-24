@@ -1,15 +1,19 @@
 from datetime import datetime, timezone
 from typing import Optional
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Column
+from sqlalchemy import BigInteger
 
 
 class User(SQLModel, table=True):
-    # table=True tells SQLModel this class maps to a real PostgreSQL table
     id: Optional[int] = Field(default=None, primary_key=True)
-    telegram_id: int = Field(unique=True, index=True)  # index speeds up lookups by telegram_id
+    # BigInteger supports values up to 9,223,372,036,854,775,807
+    # Regular Integer max is only 2,147,483,647 — too small for modern Telegram IDs
+    telegram_id: int = Field(
+        sa_column=Column(BigInteger, unique=True, index=True)
+    )
     username: Optional[str] = None
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc)  # always store UTC, never local time
+        default_factory=lambda: datetime.now(timezone.utc)
     )
 
 
